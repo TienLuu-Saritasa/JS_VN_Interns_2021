@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .mt {
+        margin-top: 50px;
+      }
+      .mouse-move {
+        width: 100px;
+        height: 100px;
+        border: 1px solid #666;
+        line-height: 100px;
+        text-align: center;
+      }
+      .focusParent {
+        padding: 20px;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <!--  -->
+    <p id="click">Event: onclick</p>
+    <button type="button" id="click-btn">Display Date</button>
+    <!--  -->
+    <div class="mt"></div>
+    <p id="mouse-over-out">Event: mouseover / mouseout (hover here)</p>
+    <!--  -->
+    <div class="mt"></div>
+    <p id="mouse-down-up">Event: mousedown / mouseup (click here)</p>
+    <!--  -->
+    <div class="mt"></div>
+    <div class="mouse-move" id="mouse-move">Mouse move</div>
+    <!--  -->
+    <div class="mt"></div>
+    <p id="key-down-up">Press space to see keydown/keyup event</p>
+    <!--  -->
+    <div class="mt"></div>
+    <h1 id="customEvent">Click to dispatch custom event</h1>
+    <!--  -->
+    <div class="mt"></div>
+    <p id="focusBlurParent-text"> This text will change if div tag focus and blur </p>
+    <p id="focusBlur-text">This text will change if input tag blur and blur </p>
+    <div class="focusParent" id="focusBlurParent">
+      <input type="text" id="focusBlur" placeholder="click here" />
+    </div>
+
+    <div class="mt"></div>
+    <p id="focusParent-text">
+      This text will change if div tag focusin and focusout
+    </p>
+    <p id="focusChild-text">
+      This text will change if input tag focusin and focusout
+    </p>
+    <div class="focusParent">
+      <input type="text" id="focusChild" placeholder="click here" />
+    </div>
+
+    <!--  -->
+
+    <script>
+      // onlick event
+      document.getElementById("click-btn").onclick = function () {
+        document.getElementById("click").innerHTML = new Date();
+      };
+
+      // onmouseover onmouseout
+      document.getElementById("mouse-over-out").onmouseover = function () {
+        this.style.color = "red";
+      };
+      document.getElementById("mouse-over-out").onmouseout = function () {
+        this.style.color = "green";
+      };
+
+      // onmousdown onmouseup
+      document.getElementById("mouse-down-up").onmousedown = function () {
+        this.style.fontSize = "32px";
+      };
+      document.getElementById("mouse-down-up").onmouseup = function () {
+        this.style.fontSize = "12px";
+      };
+
+      // onmousemove
+      document.getElementById("mouse-move").onmousemove = function (e) {
+        this.style.backgroundColor = `rgb(${randomNumber()},${randomNumber()},${randomNumber()})`;
+      };
+      function randomNumber() {
+        return Math.floor(Math.random() * 256);
+      }
+
+      // onkeyup onkeydown
+      const keydownup = document.getElementById("key-down-up");
+      document.body.onkeydown = function (e) {
+        if (e.keyCode === 32) {
+          keydownup.style.fontSize = "48px";
+        }
+      };
+      document.body.onkeyup = function (e) {
+        if (e.keyCode === 32) {
+          keydownup.style.fontSize = "16px";
+        }
+      };
+
+      // custom event
+      var customEvent = document.getElementById("customEvent");
+      customEvent.addEventListener("myCustomEvent", function (event) {
+        alert(event.detail.data);
+      });
+      customEvent.onclick = function () {
+        customEvent.dispatchEvent(
+          new CustomEvent("myCustomEvent", { detail: { data: "Tien" } })
+        );
+      };
+
+      // focus blur focusin focusout
+      const focusBlurParent = document.getElementById("focusBlurParent");
+      const focusBlurParentText = document.getElementById("focusBlurParent-text");
+      const focusBlur = document.getElementById("focusBlur");
+      const focusBlurText = document.getElementById("focusBlur-text");
+      focusBlurParent.onfocus = function () {
+        focusBlurParentText.innerHTML = "Focus";
+      };
+      focusBlurParent.onblur = function () {
+        focusBlurParentText.innerHTML = "Blur";
+      };
+      focusBlur.onfocus = function () {
+        focusBlurText.innerHTML = "Focus";
+      };
+      focusBlur.onblur = function () {
+        focusBlurText.innerHTML = "Blur";
+      };
+
+      const focusParent = document.getElementById("focusParent");
+      const focusParentText = document.getElementById("focusParent-text");
+      const focusChild = document.getElementById("focusChild");
+      const focusChildText = document.getElementById("focusChild-text");
+      focusChild.addEventListener("focusin", function () {
+        console.log("a");
+        focusParentText.innerHTML = "Parent focusint";
+        focusChildText.innerHTML = "child focusint";
+      });
+      focusChild.addEventListener("focusout", function () {
+        focusParentText.innerHTML = "Parent focusout";
+        focusChildText.innerHTML = "child focusout";
+      });
+    </script>
+  </body>
+</html>
